@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Otel Qeydiyyat Sistemi</title>
+    <script type="importmap"></script>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/site-custom.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/OtelQeydiyyatSistemi.styles.css" asp-append-version="true" />
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm border-bottom box-shadow mb-3">
+            <div class="container">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                    <i class="fas fa-hotel me-2"></i>Otel Qeydiyyat Sistemi
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">
+                                <i class="fas fa-home me-1"></i>Ana Səhifə
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Rooms">
+                                <i class="fas fa-bed me-1"></i>Otaqlar
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="About">
+                                <i class="fas fa-info-circle me-1"></i>Haqqımızda
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Contact">
+                                <i class="fas fa-envelope me-1"></i>Əlaqə
+                            </a>
+                        </li>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="fas fa-cogs me-1"></i>Admin Panel
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="adminDropdown">
+                                    <li><a class="dropdown-item" asp-controller="Admin" asp-action="Index">Dashboard</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Admin" asp-action="RoomTypes">Otaq Növləri</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Admin" asp-action="Rooms">Otaqlar</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Admin" asp-action="Reservations">Rezervasiyalar</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Admin" asp-action="Users">İstifadəçilər</a></li>
+                                </ul>
+                            </li>
+                        }
+                    </ul>
+                    <partial name="_LoginPartial" />
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer py-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <h5 class="text-white"><i class="fas fa-hotel me-2"></i>Otel Qeydiyyat Sistemi</h5>
+                    <p class="small text-white">Müştərilərimizə rahat və sürətli rezervasiya imkanı təqdim edirik.</p>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <h5 class="text-white">Faydalı Linklər</h5>
+                    <ul class="list-unstyled">
+                        <li><a class="text-white" asp-controller="Home" asp-action="Index">Ana Səhifə</a></li>
+                        <li><a class="text-white" asp-controller="Home" asp-action="Rooms">Otaqlar</a></li>
+                        <li><a class="text-white" asp-controller="Home" asp-action="About">Haqqımızda</a></li>
+                        <li><a class="text-white" asp-controller="Home" asp-action="Contact">Əlaqə</a></li>
+                        <li><a class="text-white" asp-controller="Home" asp-action="Privacy">Gizlilik Siyasəti</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <h5 class="text-white">Əlaqə</h5>
+                    <address class="text-white">
+                        <i class="fas fa-map-marker-alt me-2"></i>Bakı, Azərbaycan<br>
+                        <i class="fas fa-phone me-2"></i>(+994) 12 345 67 89<br>
+                        <i class="fas fa-envelope me-2"></i><a class="text-white" href="mailto:info@otel.az">info@otel.az</a>
+                    </address>
+                </div>
+            </div>
+            <hr class="bg-white" />
+            <div class="text-center">
+                <p class="mb-0 text-white">&copy; @DateTime.Now.Year - Otel Qeydiyyat Sistemi - Bütün hüquqlar qorunur.</p>
+            </div>
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

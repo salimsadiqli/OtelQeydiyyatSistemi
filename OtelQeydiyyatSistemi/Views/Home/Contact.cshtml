@@ -1,0 +1,100 @@
+@{
+    ViewData["Title"] = "Əlaqə";
+}
+
+<div class="container py-5">
+    <h1 class="mb-4 text-center">Bizimlə Əlaqə</h1>
+    
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <div class="card shadow h-100">
+                <div class="card-body">
+                    <h3 class="card-title mb-3">Əlaqə Məlumatları</h3>
+                    
+                    <div class="mb-3">
+                        <h5><i class="fas fa-map-marker-alt text-danger me-2"></i>Ünvan</h5>
+                        <p class="ms-4">Bakı şəhəri, Nəsimi rayonu, Azadlıq prospekti 123</p>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <h5><i class="fas fa-phone text-success me-2"></i>Telefon</h5>
+                        <p class="ms-4">+994 12 123 45 67<br>+994 50 123 45 67</p>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <h5><i class="fas fa-envelope text-primary me-2"></i>E-poçt</h5>
+                        <p class="ms-4">info@otelqeydiyyat.az<br>rezervasiya@otelqeydiyyat.az</p>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <h5><i class="fas fa-clock text-warning me-2"></i>İş saatları</h5>
+                        <p class="ms-4">Həftə içi: 09:00 - 18:00<br>Həftə sonu: 10:00 - 16:00</p>
+                    </div>
+                    
+                    <div class="mt-4">
+                        <h5>Sosial Şəbəkələr</h5>
+                        <div class="d-flex gap-3 ms-4">
+                            <a href="#" class="text-primary fs-4"><i class="fab fa-facebook"></i></a>
+                            <a href="#" class="text-info fs-4"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="text-danger fs-4"><i class="fab fa-instagram"></i></a>
+                            <a href="#" class="text-success fs-4"><i class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6 mb-4">
+            <div class="card shadow h-100">
+                <div class="card-body">
+                    <h3 class="card-title mb-3">Bizə Yazın</h3>
+                    
+                    <form>
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Ad Soyad</label>
+                            <input type="text" class="form-control" id="name" placeholder="Adınızı və soyadınızı daxil edin">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="email" class="form-label">E-poçt</label>
+                            <input type="email" class="form-control" id="email" placeholder="E-poçt ünvanınızı daxil edin">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="phone" class="form-label">Telefon</label>
+                            <input type="tel" class="form-control" id="phone" placeholder="Telefon nömrənizi daxil edin">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="subject" class="form-label">Mövzu</label>
+                            <input type="text" class="form-control" id="subject" placeholder="Müraciətinizin mövzusunu daxil edin">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="message" class="form-label">Mesaj</label>
+                            <textarea class="form-control" id="message" rows="5" placeholder="Mesajınızı daxil edin"></textarea>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="fas fa-paper-plane me-2"></i>Göndər
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-body">
+                    <h3 class="card-title mb-3">Xəritədə Biz</h3>
+                    <div class="ratio ratio-21x9">
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d48626.13496560223!2d49.82255324863283!3d40.37719199999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x40307d079efb5163%3A0xc20aa51a5f0b5e01!2sAzadl%C4%B1q%20prospekti%2C%20Baku!5e0!3m2!1sen!2saz!4v1621345678901!5m2!1sen!2saz" 
+                                style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,116 @@
+@model OtelQeydiyyatSistemi.Models.Room
+
+@{
+    ViewData["Title"] = "Otaq Detalları";
+}
+
+<div class="container py-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Ana Səhifə</a></li>
+            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Rooms">Otaqlar</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Otaq @Model.RoomNumber</li>
+        </ol>
+    </nav>
+
+    <div class="card shadow">
+        <div class="card-header bg-dark text-white">
+            <h3 class="mb-0">Otaq @Model.RoomNumber - @Model.RoomType.Name</h3>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <img src="https://via.placeholder.com/600x400?text=Otaq+@Model.RoomNumber" class="img-fluid rounded mb-3" alt="Otaq @Model.RoomNumber">
+                    
+                    <h4 class="mt-4">Otaq Haqqında</h4>
+                    <p>@Model.Description</p>
+                    
+                    <h4 class="mt-4">Xüsusiyyətlər</h4>
+                    <ul class="list-group mb-4">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Otaq növü
+                            <span class="badge bg-primary rounded-pill">@Model.RoomType.Name</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Mərtəbə
+                            <span class="badge bg-primary rounded-pill">@Model.Floor</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Qiymət (gecə)
+                            <span class="badge bg-success rounded-pill">@Model.PricePerNight ₼</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Status
+                            <span class="badge bg-success rounded-pill">@(Model.Status == OtelQeydiyyatSistemi.Models.RoomStatus.Available ? "Boş" : "Dolu")</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                    <div class="card mb-4">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0"><i class="fas fa-calendar-alt me-2"></i>Rezervasiya</h5>
+                        </div>
+                        <div class="card-body">
+                            @if (Model.Status == OtelQeydiyyatSistemi.Models.RoomStatus.Available)
+                            {
+                                @if (User.Identity.IsAuthenticated)
+                                {
+                                    <p>Bu otağı rezervasiya etmək üçün aşağıdakı düyməni klikləyin:</p>
+                                    <div class="d-grid gap-2">
+                                        <a asp-controller="Reservation" asp-action="Create" asp-route-roomId="@Model.Id" class="btn btn-primary btn-lg">
+                                            <i class="fas fa-calendar-alt me-2"></i>Rezervasiya et
+                                        </a>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <p>Rezervasiya etmək üçün əvvəlcə hesabınıza daxil olmalısınız:</p>
+                                    <div class="d-grid gap-2">
+                                        <a asp-controller="Account" asp-action="Login" asp-route-returnUrl="@Url.Action("RoomDetails", "Home", new { id = Model.Id })" class="btn btn-primary btn-lg">
+                                            <i class="fas fa-sign-in-alt me-2"></i>Giriş
+                                        </a>
+                                        <a asp-controller="Account" asp-action="Register" class="btn btn-outline-primary">
+                                            <i class="fas fa-user-plus me-2"></i>Qeydiyyat
+                                        </a>
+                                    </div>
+                                }
+                            }
+                            else
+                            {
+                                <div class="alert alert-warning">
+                                    <i class="fas fa-exclamation-triangle me-2"></i>Bu otaq hal-hazırda boş deyil və rezervasiya edilə bilməz.
+                                </div>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header bg-info text-white">
+                            <h5 class="mb-0"><i class="fas fa-info-circle me-2"></i>Əlavə Məlumat</h5>
+                        </div>
+                        <div class="card-body">
+                            <h6>Otaq Təchizatı</h6>
+                            <ul>
+                                <li>Kondisioner</li>
+                                <li>Pulsuz Wi-Fi</li>
+                                <li>Televizor</li>
+                                <li>Mini-bar</li>
+                                <li>Çay/qəhvə hazırlama imkanı</li>
+                                <li>Təhlükəsizlik seyfı</li>
+                            </ul>
+
+                            <h6>Qeyd</h6>
+                            <p>Qeydiyyat vaxtı: 14:00-dan sonra<br>
+                               Çıxış vaxtı: 12:00-a qədər</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <a asp-controller="Home" asp-action="Rooms" class="btn btn-secondary">
+                <i class="fas fa-arrow-left me-2"></i>Otaqlar siyahısına qayıt
+            </a>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,150 @@
+@model IEnumerable<OtelQeydiyyatSistemi.Models.RoomType>
+
+@{
+    ViewData["Title"] = "Otaqlar";
+}
+
+<div class="container py-4">
+    <h1 class="mb-4 border-bottom pb-2">
+        <i class="fas fa-bed me-2"></i>Otaq Növləri
+    </h1>
+
+    @if (Model.Any())
+    {
+        <div class="row">
+            @foreach (var roomType in Model)
+            {
+                <div class="col-md-6 mb-4">
+                    <div class="card shadow hover-effect">
+                        <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0"><i class="fas fa-bed me-2"></i>@roomType.Name Otaq</h5>
+                            <span class="badge bg-info">@roomType.Rooms.Count() otaq</span>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    @{
+                                        string imageUrl = "";
+                                        switch (roomType.Name)
+                                        {
+                                            case "Tək":
+                                                imageUrl = "/images/rooms/single1.jpg";
+                                                break;
+                                            case "Cüt":
+                                                imageUrl = "/images/rooms/double1.jpg";
+                                                break;
+                                            case "Ailə":
+                                                imageUrl = "/images/rooms/family1.jpg";
+                                                break;
+                                            case "Lüks":
+                                                imageUrl = "/images/rooms/luxury1.jpg";
+                                                break;
+                                            case "Prezident":
+                                                imageUrl = "/images/rooms/presidential.jpg";
+                                                break;
+                                            default:
+                                                imageUrl = $"https://via.placeholder.com/200x200?text={roomType.Name}+Otaq";
+                                                break;
+                                        }
+                                    }
+                                    <div class="room-image-container rounded shadow-sm">
+                                        <img src="@imageUrl" class="img-fluid rounded" alt="@roomType.Name Otaq" style="width: 100%; height: 200px; object-fit: cover;">
+                                        <div class="room-image-overlay rounded">
+                                            <a href="@imageUrl" target="_blank" class="btn btn-sm btn-light">
+                                                <i class="fas fa-search-plus"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-8">
+                                    <h5 class="card-title">@roomType.Name</h5>
+                                    <p class="card-text">@roomType.Description</p>
+                                    <ul class="list-group list-group-flush mb-3">
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            Baza qiyməti (gecə)
+                                            <span class="badge bg-success rounded-pill">@roomType.BasePrice ₼</span>
+                                        </li>
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            Mövcud otaqlar
+                                            <span class="badge bg-primary rounded-pill">@roomType.Rooms.Count(r => r.Status == OtelQeydiyyatSistemi.Models.RoomStatus.Available)</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer d-flex justify-content-between align-items-center">
+                            <div>
+                                <span class="badge bg-success me-2">@roomType.Rooms.Count(r => r.Status == OtelQeydiyyatSistemi.Models.RoomStatus.Available) boş</span>
+                                <span class="text-muted small">@roomType.BasePrice₼-dən başlayaraq</span>
+                            </div>
+                            <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapse@(roomType.Id)" aria-expanded="false" aria-controls="collapse@(roomType.Id)">
+                                <i class="fas fa-list me-2"></i>Boş otaqları göstər
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="collapse mt-2" id="collapse@(roomType.Id)">
+                        <div class="card card-body">
+                            @if (roomType.Rooms.Any(r => r.Status == OtelQeydiyyatSistemi.Models.RoomStatus.Available))
+                            {
+                                <div class="table-responsive">
+                                    <table class="table table-hover table-striped">
+                                        <thead class="table-dark">
+                                            <tr>
+                                                <th><i class="fas fa-door-open me-2"></i>Otaq №</th>
+                                                <th><i class="fas fa-building me-2"></i>Mərtəbə</th>
+                                                <th><i class="fas fa-tag me-2"></i>Qiymət</th>
+                                                <th><i class="fas fa-cogs me-2"></i>Əməliyyatlar</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var room in roomType.Rooms.Where(r => r.Status == OtelQeydiyyatSistemi.Models.RoomStatus.Available))
+                                            {
+                                                <tr>
+                                                    <td class="align-middle">
+                                                        <span class="badge bg-dark me-2">@room.RoomNumber</span>
+                                                        @if (!string.IsNullOrEmpty(room.ImageUrl))
+                                                        {
+                                                            <img src="@room.ImageUrl" alt="Otaq @room.RoomNumber" class="img-thumbnail" style="width: 50px; height: 50px; object-fit: cover;">
+                                                        }
+                                                    </td>
+                                                    <td class="align-middle">@room.Floor</td>
+                                                    <td class="align-middle fw-bold text-success">@room.PricePerNight ₼</td>
+                                                    <td class="align-middle">
+                                                        <div class="btn-group" role="group">
+                                                            <a asp-controller="Home" asp-action="RoomDetails" asp-route-id="@room.Id" class="btn btn-sm btn-outline-primary">
+                                                                <i class="fas fa-info-circle me-1"></i> Ətraflı
+                                                            </a>
+                                                            @if (User.Identity.IsAuthenticated)
+                                                            {
+                                                                <a asp-controller="Reservation" asp-action="Create" asp-route-roomId="@room.Id" class="btn btn-sm btn-primary">
+                                                                    <i class="fas fa-calendar-alt me-1"></i> Rezervasiya
+                                                                </a>
+                                                            }
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="alert alert-info mb-0">
+                                    <i class="fas fa-info-circle me-2"></i>Hal-hazırda bu növdə boş otaq yoxdur.
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info">
+            <i class="fas fa-info-circle me-2"></i>Hal-hazırda heç bir otaq növü mövcud deyil.
+        </div>
+    }
+</div>

@@ -1,0 +1,235 @@
+@model OtelQeydiyyatSistemi.ViewModels.AdminDashboardViewModel
+
+@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-2">
+        <h1 class="mb-0">
+            <i class="fas fa-tachometer-alt me-2 text-primary"></i>Admin Dashboard
+        </h1>
+        <div>
+            <a asp-controller="Admin" asp-action="CreateReservation" class="btn btn-primary me-2">
+                <i class="fas fa-plus-circle me-2"></i>Yeni Rezervasiya
+            </a>
+            <a asp-controller="Admin" asp-action="CreateRoom" class="btn btn-success">
+                <i class="fas fa-plus-circle me-2"></i>Yeni Otaq
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4 mb-4">
+            <div class="card bg-primary text-white h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h5 class="card-title">Ümumi Otaqlar</h5>
+                            <h2 class="display-4">@Model.TotalRooms</h2>
+                        </div>
+                        <i class="fas fa-bed fa-3x"></i>
+                    </div>
+                </div>
+                <div class="card-footer d-flex align-items-center justify-content-between">
+                    <a asp-controller="Admin" asp-action="Rooms" class="text-white text-decoration-none">Ətraflı</a>
+                    <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card bg-success text-white h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h5 class="card-title">Boş Otaqlar</h5>
+                            <h2 class="display-4">@Model.AvailableRooms</h2>
+                        </div>
+                        <i class="fas fa-check-circle fa-3x"></i>
+                    </div>
+                </div>
+                <div class="card-footer d-flex align-items-center justify-content-between">
+                    <a asp-controller="Admin" asp-action="Rooms" class="text-white text-decoration-none">Ətraflı</a>
+                    <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card bg-danger text-white h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h5 class="card-title">Dolu Otaqlar</h5>
+                            <h2 class="display-4">@Model.OccupiedRooms</h2>
+                        </div>
+                        <i class="fas fa-door-closed fa-3x"></i>
+                    </div>
+                </div>
+                <div class="card-footer d-flex align-items-center justify-content-between">
+                    <a asp-controller="Admin" asp-action="Rooms" class="text-white text-decoration-none">Ətraflı</a>
+                    <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4 mb-4">
+            <div class="card bg-info text-white h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h5 class="card-title">Ümumi Rezervasiyalar</h5>
+                            <h2 class="display-4">@Model.TotalReservations</h2>
+                        </div>
+                        <i class="fas fa-calendar-alt fa-3x"></i>
+                    </div>
+                </div>
+                <div class="card-footer d-flex align-items-center justify-content-between">
+                    <a asp-controller="Admin" asp-action="Reservations" class="text-white text-decoration-none">Ətraflı</a>
+                    <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card bg-warning text-white h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h5 class="card-title">Gözləyən Rezervasiyalar</h5>
+                            <h2 class="display-4">@Model.PendingReservations</h2>
+                        </div>
+                        <i class="fas fa-hourglass-half fa-3x"></i>
+                    </div>
+                </div>
+                <div class="card-footer d-flex align-items-center justify-content-between">
+                    <a asp-controller="Admin" asp-action="Reservations" class="text-white text-decoration-none">Ətraflı</a>
+                    <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card bg-secondary text-white h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h5 class="card-title">Müştərilər</h5>
+                            <h2 class="display-4">@Model.TotalCustomers</h2>
+                        </div>
+                        <i class="fas fa-users fa-3x"></i>
+                    </div>
+                </div>
+                <div class="card-footer d-flex align-items-center justify-content-between">
+                    <a asp-controller="Admin" asp-action="Users" class="text-white text-decoration-none">Ətraflı</a>
+                    <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <div class="card shadow border-0 h-100">
+                <div class="card-header bg-dark text-white">
+                    <h5 class="mb-0"><i class="fas fa-cogs me-2 text-warning"></i>Sürətli Əməliyyatlar</h5>
+                </div>
+                <div class="card-body">
+                    <div class="list-group list-group-flush">
+                        <a asp-controller="Admin" asp-action="CreateReservation" class="list-group-item list-group-item-action d-flex align-items-center py-3 px-3 border-0 border-bottom">
+                            <div class="me-3 bg-primary text-white rounded-circle p-2">
+                                <i class="fas fa-calendar-plus"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-0">Yeni Rezervasiya</h6>
+                                <small class="text-muted">Müştəri üçün yeni rezervasiya yarat</small>
+                            </div>
+                        </a>
+                        <a asp-controller="Admin" asp-action="CreateRoomType" class="list-group-item list-group-item-action d-flex align-items-center py-3 px-3 border-0 border-bottom">
+                            <div class="me-3 bg-success text-white rounded-circle p-2">
+                                <i class="fas fa-tags"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-0">Yeni Otaq Növü</h6>
+                                <small class="text-muted">Yeni otaq növü və qiymət əlavə et</small>
+                            </div>
+                        </a>
+                        <a asp-controller="Admin" asp-action="CreateRoom" class="list-group-item list-group-item-action d-flex align-items-center py-3 px-3 border-0 border-bottom">
+                            <div class="me-3 bg-info text-white rounded-circle p-2">
+                                <i class="fas fa-bed"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-0">Yeni Otaq</h6>
+                                <small class="text-muted">Otelə yeni otaq əlavə et</small>
+                            </div>
+                        </a>
+                        <a asp-controller="Admin" asp-action="CreateAdmin" class="list-group-item list-group-item-action d-flex align-items-center py-3 px-3 border-0">
+                            <div class="me-3 bg-danger text-white rounded-circle p-2">
+                                <i class="fas fa-user-shield"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-0">Yeni Admin</h6>
+                                <small class="text-muted">Sistemə yeni admin istifadəçi əlavə et</small>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 mb-4">
+            <div class="card shadow border-0 h-100">
+                <div class="card-header bg-dark text-white">
+                    <h5 class="mb-0"><i class="fas fa-link me-2 text-info"></i>Sistem Bölmələri</h5>
+                </div>
+                <div class="card-body p-0">
+                    <div class="list-group list-group-flush">
+                        <a asp-controller="Home" asp-action="Index" class="list-group-item list-group-item-action d-flex align-items-center py-3 px-3 border-0 border-bottom">
+                            <div class="me-3 bg-secondary text-white rounded-circle p-2">
+                                <i class="fas fa-home"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-0">Ana Səhifə</h6>
+                                <small class="text-muted">Saytın ana səhifəsinə get</small>
+                            </div>
+                        </a>
+                        <a asp-controller="Admin" asp-action="RoomTypes" class="list-group-item list-group-item-action d-flex align-items-center py-3 px-3 border-0 border-bottom">
+                            <div class="me-3 bg-success text-white rounded-circle p-2">
+                                <i class="fas fa-list"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-0">Otaq Növləri</h6>
+                                <small class="text-muted">Bütün otaq növlərini idarə et</small>
+                            </div>
+                        </a>
+                        <a asp-controller="Admin" asp-action="Rooms" class="list-group-item list-group-item-action d-flex align-items-center py-3 px-3 border-0 border-bottom">
+                            <div class="me-3 bg-primary text-white rounded-circle p-2">
+                                <i class="fas fa-bed"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-0">Otaqlar</h6>
+                                <small class="text-muted">Bütün otaqları idarə et</small>
+                            </div>
+                        </a>
+                        <a asp-controller="Admin" asp-action="Reservations" class="list-group-item list-group-item-action d-flex align-items-center py-3 px-3 border-0 border-bottom">
+                            <div class="me-3 bg-warning text-white rounded-circle p-2">
+                                <i class="fas fa-calendar-alt"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-0">Rezervasiyalar</h6>
+                                <small class="text-muted">Bütün rezervasiyaları idarə et</small>
+                            </div>
+                        </a>
+                        <a asp-controller="Admin" asp-action="Users" class="list-group-item list-group-item-action d-flex align-items-center py-3 px-3 border-0">
+                            <div class="me-3 bg-info text-white rounded-circle p-2">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-0">İstifadəçilər</h6>
+                                <small class="text-muted">Bütün istifadəçiləri idarə et</small>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

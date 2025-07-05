@@ -1,0 +1,274 @@
+@model OtelQeydiyyatSistemi.ViewModels.ReservationCreateViewModel
+
+@{
+    ViewData["Title"] = "Rezervasiya Yarat";
+}
+
+<div class="container py-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Ana Səhifə</a></li>
+            <li class="breadcrumb-item"><a asp-controller="Reservation" asp-action="Index">Rezervasiyalarım</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Rezervasiya Yarat</li>
+        </ol>
+    </nav>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0"><i class="fas fa-calendar-alt me-2"></i>Rezervasiya Yarat</h3>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Create" method="post">
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-12">
+                                <div class="form-floating">
+                                    <select asp-for="RoomId" class="form-select" asp-items="ViewBag.RoomId"></select>
+                                    <label asp-for="RoomId">Otaq</label>
+                                    <span asp-validation-for="RoomId" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input asp-for="CheckInDate" class="form-control" type="date" min="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                                    <label asp-for="CheckInDate">Giriş tarixi</label>
+                                    <span asp-validation-for="CheckInDate" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input asp-for="CheckOutDate" class="form-control" type="date" min="@DateTime.Now.AddDays(1).ToString("yyyy-MM-dd")" />
+                                    <label asp-for="CheckOutDate">Çıxış tarixi</label>
+                                    <span asp-validation-for="CheckOutDate" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input asp-for="Adults" class="form-control" type="number" min="1" max="10" />
+                                    <label asp-for="Adults">Böyüklərin sayı</label>
+                                    <span asp-validation-for="Adults" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input asp-for="Children" class="form-control" type="number" min="0" max="10" />
+                                    <label asp-for="Children">Uşaqların sayı</label>
+                                    <span asp-validation-for="Children" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="form-floating">
+                                <textarea asp-for="SpecialRequests" class="form-control" style="height: 100px"></textarea>
+                                <label asp-for="SpecialRequests">Xüsusi istəklər</label>
+                                <span asp-validation-for="SpecialRequests" class="text-danger"></span>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label asp-for="PaymentMethod" class="form-label">Ödəniş metodu</label>
+                            <div class="d-flex gap-4 mt-2">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" asp-for="PaymentMethod" id="paymentCash" value="Cash" checked>
+                                    <label class="form-check-label" for="paymentCash">
+                                        <i class="fas fa-money-bill-wave me-2 text-success"></i>Nağd
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" asp-for="PaymentMethod" id="paymentCard" value="Card">
+                                    <label class="form-check-label" for="paymentCard">
+                                        <i class="fas fa-credit-card me-2 text-primary"></i>Kart
+                                    </label>
+                                </div>
+                            </div>
+                            <span asp-validation-for="PaymentMethod" class="text-danger"></span>
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a asp-controller="Reservation" asp-action="Index" class="btn btn-secondary me-md-2">
+                                <i class="fas fa-times me-2"></i>Ləğv et
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-calendar-check me-2"></i>Rezervasiya et
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow mb-4">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0"><i class="fas fa-info-circle me-2"></i>Rezervasiya Məlumatı</h5>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-primary">
+                        <strong>Qeyd:</strong> Otağı və tarixləri seçdikdən sonra qiymət avtomatik hesablanacaq.
+                    </div>
+                    <div id="price-info" class="d-none">
+                        <h5>Hesablama</h5>
+                        <table class="table table-sm">
+                            <tr>
+                                <td>Gecə sayı:</td>
+                                <td id="nights-count">0</td>
+                            </tr>
+                            <tr>
+                                <td>Gecə qiyməti:</td>
+                                <td id="price-per-night">0 ₼</td>
+                            </tr>
+                            <tr class="fw-bold">
+                                <td>Ümumi qiymət:</td>
+                                <td id="total-price">0 ₼</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="card shadow">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0"><i class="fas fa-info-circle me-2"></i>Rezervasiya Qaydaları</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <i class="fas fa-check-circle text-success me-2"></i>Rezervasiya etdikdən sonra təsdiq emaili alacaqsınız.
+                        </li>
+                        <li class="list-group-item">
+                            <i class="fas fa-check-circle text-success me-2"></i>Giriş saatı: 14:00-dan sonra.
+                        </li>
+                        <li class="list-group-item">
+                            <i class="fas fa-check-circle text-success me-2"></i>Çıxış saatı: 12:00-a qədər.
+                        </li>
+                        <li class="list-group-item">
+                            <i class="fas fa-check-circle text-success me-2"></i>Rezervasiyanı giriş tarixindən 24 saat əvvələ qədər ləğv edə bilərsiniz.
+                        </li>
+                        <li class="list-group-item">
+                            <i class="fas fa-check-circle text-success me-2"></i>Ödəniş gəldiyiniz zaman qəbul edilir.
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        $(document).ready(function () {
+            // Səhifə yükləndikdə ilk hesablamanı et
+            setTimeout(function() {
+                calculatePrice();
+            }, 500);
+            
+            // Giriş tarixi dəyişdikdə çıxış tarixini avtomatik yenilə
+            $('#CheckInDate').on('change', function () {
+                var checkInDate = new Date($(this).val());
+                var checkOutDate = new Date(checkInDate);
+                checkOutDate.setDate(checkOutDate.getDate() + 1);
+                
+                var checkOutDateFormatted = checkOutDate.toISOString().split('T')[0];
+                $('#CheckOutDate').attr('min', checkOutDateFormatted);
+                
+                // Əgər çıxış tarixi giriş tarixinə bərabər və ya əvvəldirsə, çıxış tarixini yenilə
+                var currentCheckOutDate = new Date($('#CheckOutDate').val());
+                if (currentCheckOutDate <= checkInDate) {
+                    $('#CheckOutDate').val(checkOutDateFormatted);
+                }
+                
+                calculatePrice();
+            });
+            
+            // Çıxış tarixi dəyişdikdə qiyməti hesabla
+            $('#CheckOutDate').on('change', function () {
+                calculatePrice();
+            });
+            
+            // Otaq seçimi dəyişdikdə qiyməti hesabla
+            $('#RoomId').on('change', function () {
+                calculatePrice();
+            });
+            
+            // Qiymət hesablamaq üçün funksiya
+            function calculatePrice() {
+                var roomId = $('#RoomId').val();
+                var checkInDate = $('#CheckInDate').val();
+                var checkOutDate = $('#CheckOutDate').val();
+                
+                if (roomId && checkInDate && checkOutDate) {
+                    try {
+                        var start = new Date(checkInDate);
+                        var end = new Date(checkOutDate);
+                        var nights = Math.floor((end - start) / (1000 * 60 * 60 * 24));
+                        if (nights <= 0) nights = 1; // Ən az 1 gecə
+                        
+                        // Otaq seçimindən qiyməti çıxarırıq
+                        var roomText = $("#RoomId option:selected").text();
+                        console.log("Seçilmiş otaq:", roomText);
+                        
+                        // Qiyməti çıxarmaq üçün müxtəlif regex variantları
+                        var pricePerNight = 80; // Default qiymət
+                        
+                        if (roomText.includes('-')) {
+                            var parts = roomText.split('-');
+                            if (parts.length >= 3) {
+                                var priceText = parts[2].trim();
+                                var priceMatch = priceText.match(/(\d+)/);
+                                if (priceMatch) {
+                                    pricePerNight = parseInt(priceMatch[1]);
+                                }
+                            }
+                        }
+                        
+                        console.log("Gecə qiyməti:", pricePerNight);
+                        var totalPrice = nights * pricePerNight;
+                        
+                        $('#nights-count').text(nights);
+                        $('#price-per-night').text(pricePerNight + ' ₼');
+                        $('#total-price').text(totalPrice + ' ₼');
+                        
+                        $('#price-info').removeClass('d-none');
+                        
+                        console.log("Hesablama:", nights, "gecə x", pricePerNight, "AZN =", totalPrice, "AZN");
+                    } catch (e) {
+                        console.error("Qiymət hesablama xətası:", e);
+                    }
+                }
+            }
+            
+            // Formu göndərməzdən əvvəl yoxlama
+            $('form').on('submit', function(e) {
+                var roomId = $('#RoomId').val();
+                var checkInDate = $('#CheckInDate').val();
+                var checkOutDate = $('#CheckOutDate').val();
+                
+                if (!roomId || !checkInDate || !checkOutDate) {
+                    e.preventDefault();
+                    alert('Zəhmət olmasa bütün məlumatları doldurun!');
+                    return false;
+                }
+                
+                var start = new Date(checkInDate);
+                var end = new Date(checkOutDate);
+                if (end <= start) {
+                    e.preventDefault();
+                    alert('Çıxış tarixi giriş tarixinə bərabər və ya əvvəl ola bilməz!');
+                    return false;
+                }
+                
+                return true;
+            });
+        });
+    </script>
+}

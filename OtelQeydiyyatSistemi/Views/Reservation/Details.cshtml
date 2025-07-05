@@ -1,0 +1,167 @@
+@model OtelQeydiyyatSistemi.Models.Reservation
+
+@{
+    ViewData["Title"] = "Rezervasiya Detalları";
+}
+
+<div class="container py-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Ana Səhifə</a></li>
+            <li class="breadcrumb-item"><a asp-action="Index">Rezervasiyalarım</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Rezervasiya #@Model.Id</li>
+        </ol>
+    </nav>
+
+    <div class="card shadow">
+        <div class="card-header bg-dark text-white">
+            <h3 class="mb-0"><i class="fas fa-calendar-alt me-2"></i>Rezervasiya #@Model.Id</h3>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <h4 class="mb-3">Rezervasiya Məlumatları</h4>
+                    <table class="table table-bordered">
+                        <tr>
+                            <th>Rezervasiya №</th>
+                            <td>@Model.Id</td>
+                        </tr>
+                        <tr>
+                            <th>Rezervasiya Tarixi</th>
+                            <td>@Model.ReservationDate.ToString("dd.MM.yyyy HH:mm")</td>
+                        </tr>
+                        <tr>
+                            <th>Giriş Tarixi</th>
+                            <td>@Model.CheckInDate.ToString("dd.MM.yyyy")</td>
+                        </tr>
+                        <tr>
+                            <th>Çıxış Tarixi</th>
+                            <td>@Model.CheckOutDate.ToString("dd.MM.yyyy")</td>
+                        </tr>
+                        <tr>
+                            <th>Qalma Müddəti</th>
+                            <td>@Model.GetDurationInDays() gün</td>
+                        </tr>
+                        <tr>
+                            <th>Status</th>
+                            <td>
+                                @switch (Model.Status)
+                                {
+                                    case OtelQeydiyyatSistemi.Models.ReservationStatus.Pending:
+                                        <span class="badge bg-warning">Gözləyir</span>
+                                        break;
+                                    case OtelQeydiyyatSistemi.Models.ReservationStatus.Confirmed:
+                                        <span class="badge bg-success">Təsdiqlənib</span>
+                                        break;
+                                    case OtelQeydiyyatSistemi.Models.ReservationStatus.CheckedIn:
+                                        <span class="badge bg-primary">Giriş edilib</span>
+                                        break;
+                                    case OtelQeydiyyatSistemi.Models.ReservationStatus.CheckedOut:
+                                        <span class="badge bg-secondary">Çıxış edilib</span>
+                                        break;
+                                    case OtelQeydiyyatSistemi.Models.ReservationStatus.Cancelled:
+                                        <span class="badge bg-danger">Ləğv edilib</span>
+                                        break;
+                                }
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Ümumi Qiymət</th>
+                            <td>@Model.TotalPrice ₼</td>
+                        </tr>
+                    </table>
+
+                    @if (!string.IsNullOrEmpty(Model.SpecialRequests))
+                    {
+                        <h4 class="mb-3 mt-4">Xüsusi İstəklər</h4>
+                        <div class="alert alert-info">
+                            @Model.SpecialRequests
+                        </div>
+                    }
+                </div>
+                <div class="col-md-6">
+                    <h4 class="mb-3">Otaq Məlumatları</h4>
+                    <div class="card mb-4">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0">Otaq @Model.Room.RoomNumber @(Model.Room.RoomType != null ? $"- {Model.Room.RoomType.Name}" : "")</h5>
+                        </div>
+                        <img src="https://via.placeholder.com/400x200?text=Otaq+@Model.Room.RoomNumber" class="card-img-top" alt="Otaq @Model.Room.RoomNumber">
+                        <div class="card-body">
+                            <p>@Model.Room.Description</p>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    Mərtəbə
+                                    <span class="badge bg-primary rounded-pill">@Model.Room.Floor</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    Qiymət (gecə)
+                                    <span class="badge bg-success rounded-pill">@Model.Room.PricePerNight ₼</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <h4 class="mb-3">Müştəri Məlumatları</h4>
+                        <table class="table table-bordered">
+                            <tr>
+                                <th>Ad</th>
+                                <td>@Model.User.FirstName</td>
+                            </tr>
+                            <tr>
+                                <th>Soyad</th>
+                                <td>@Model.User.LastName</td>
+                            </tr>
+                            <tr>
+                                <th>Email</th>
+                                <td>@Model.User.Email</td>
+                            </tr>
+                            <tr>
+                                <th>Ünvan</th>
+                                <td>@Model.User.Address</td>
+                            </tr>
+                        </table>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <div class="d-flex justify-content-between">
+                <a asp-action="Index" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left me-2"></i>Rezervasiyalara qayıt
+                </a>
+                <div>
+                    @if (Model.Status != OtelQeydiyyatSistemi.Models.ReservationStatus.CheckedIn && 
+                        Model.Status != OtelQeydiyyatSistemi.Models.ReservationStatus.CheckedOut && 
+                        Model.Status != OtelQeydiyyatSistemi.Models.ReservationStatus.Cancelled)
+                    {
+                        <a asp-action="Cancel" asp-route-id="@Model.Id" class="btn btn-danger btn-cancel-reservation" data-id="@Model.Id">
+                            <i class="fas fa-times me-2"></i>Rezervasiyanı ləğv et
+                        </a>
+                    }
+                    @if (User.IsInRole("Admin"))
+                    {
+                        @if (Model.Status == OtelQeydiyyatSistemi.Models.ReservationStatus.Pending || 
+                            Model.Status == OtelQeydiyyatSistemi.Models.ReservationStatus.Confirmed)
+                        {
+                            <a asp-action="CheckIn" asp-route-id="@Model.Id" class="btn btn-success ms-2 btn-check-in" data-id="@Model.Id">
+                                <i class="fas fa-sign-in-alt me-2"></i>Giriş et
+                            </a>
+                        }
+                        @if (Model.Status == OtelQeydiyyatSistemi.Models.ReservationStatus.CheckedIn)
+                        {
+                            <a asp-action="CheckOut" asp-route-id="@Model.Id" class="btn btn-primary ms-2 btn-check-out" data-id="@Model.Id">
+                                <i class="fas fa-sign-out-alt me-2"></i>Çıxış et
+                            </a>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/reservation.js"></script>
+}

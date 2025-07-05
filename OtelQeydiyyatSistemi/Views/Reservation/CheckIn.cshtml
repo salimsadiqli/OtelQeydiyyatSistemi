@@ -1,0 +1,134 @@
+@model OtelQeydiyyatSistemi.Models.Reservation
+
+@{
+    ViewData["Title"] = "Müştəri Girişi";
+}
+
+<div class="container py-4">
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+            <h1 class="h4 mb-0">
+                <i class="fas fa-sign-in-alt me-2"></i>Müştəri Girişi
+            </h1>
+        </div>
+        <div class="card-body">
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle me-2"></i>Diqqət! Bu əməliyyatı təsdiqləməklə müştərinin otağa giriş etdiyini təsdiqləyirsiniz.
+            </div>
+
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <div class="card mb-3">
+                        <div class="card-header bg-dark text-white">
+                            <h5 class="mb-0">Rezervasiya Məlumatları</h5>
+                        </div>
+                        <div class="card-body">
+                            <dl class="row">
+                                <dt class="col-sm-4">Rezervasiya №</dt>
+                                <dd class="col-sm-8">@Model.Id</dd>
+
+                                <dt class="col-sm-4">Giriş Tarixi</dt>
+                                <dd class="col-sm-8">@Model.CheckInDate.ToString("dd.MM.yyyy")</dd>
+
+                                <dt class="col-sm-4">Çıxış Tarixi</dt>
+                                <dd class="col-sm-8">@Model.CheckOutDate.ToString("dd.MM.yyyy")</dd>
+
+                                <dt class="col-sm-4">Ümumi Qiymət</dt>
+                                <dd class="col-sm-8">@Model.TotalPrice ₼</dd>
+
+                                <dt class="col-sm-4">Status</dt>
+                                <dd class="col-sm-8">
+                                    @switch (Model.Status)
+                                    {
+                                        case OtelQeydiyyatSistemi.Models.ReservationStatus.Pending:
+                                            <span class="badge bg-warning">Gözləyir</span>
+                                            break;
+                                        case OtelQeydiyyatSistemi.Models.ReservationStatus.Confirmed:
+                                            <span class="badge bg-success">Təsdiqlənib</span>
+                                            break;
+                                        case OtelQeydiyyatSistemi.Models.ReservationStatus.CheckedIn:
+                                            <span class="badge bg-primary">Giriş edilib</span>
+                                            break;
+                                        case OtelQeydiyyatSistemi.Models.ReservationStatus.CheckedOut:
+                                            <span class="badge bg-secondary">Çıxış edilib</span>
+                                            break;
+                                        case OtelQeydiyyatSistemi.Models.ReservationStatus.Cancelled:
+                                            <span class="badge bg-danger">Ləğv edilib</span>
+                                            break;
+                                    }
+                                </dd>
+
+                                <dt class="col-sm-4">Xüsusi İstəklər</dt>
+                                <dd class="col-sm-8">
+                                    @if (string.IsNullOrEmpty(Model.SpecialRequests))
+                                    {
+                                        <span class="text-muted">Yoxdur</span>
+                                    }
+                                    else
+                                    {
+                                        @Model.SpecialRequests
+                                    }
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card mb-3">
+                        <div class="card-header bg-dark text-white">
+                            <h5 class="mb-0">Müştəri Məlumatları</h5>
+                        </div>
+                        <div class="card-body">
+                            <dl class="row">
+                                <dt class="col-sm-4">Ad Soyad</dt>
+                                <dd class="col-sm-8">@Model.User.FirstName @Model.User.LastName</dd>
+
+                                <dt class="col-sm-4">E-poçt</dt>
+                                <dd class="col-sm-8">@Model.User.Email</dd>
+
+                                <dt class="col-sm-4">Telefon</dt>
+                                <dd class="col-sm-8">@Model.User.PhoneNumber</dd>
+
+                                <dt class="col-sm-4">Ünvan</dt>
+                                <dd class="col-sm-8">@Model.User.Address</dd>
+                            </dl>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header bg-dark text-white">
+                            <h5 class="mb-0">Otaq Məlumatları</h5>
+                        </div>
+                        <div class="card-body">
+                            <dl class="row">
+                                <dt class="col-sm-4">Otaq №</dt>
+                                <dd class="col-sm-8">@Model.Room.RoomNumber</dd>
+
+                                <dt class="col-sm-4">Mərtəbə</dt>
+                                <dd class="col-sm-8">@Model.Room.Floor</dd>
+
+                                <dt class="col-sm-4">Otaq Növü</dt>
+                                <dd class="col-sm-8">@(Model.Room.RoomType != null ? Model.Room.RoomType.Name : "")</dd>
+
+                                <dt class="col-sm-4">Qiymət (gecə)</dt>
+                                <dd class="col-sm-8">@Model.Room.PricePerNight ₼</dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <form asp-action="CheckIn" method="post">
+                <input type="hidden" asp-for="Id" />
+                <div class="d-flex justify-content-between">
+                    <a asp-action="Index" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left me-2"></i>Geri qayıt
+                    </a>
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-check-circle me-2"></i>Müştəri girişini təsdiqlə
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

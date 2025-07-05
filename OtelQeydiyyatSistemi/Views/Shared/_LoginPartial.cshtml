@@ -1,0 +1,46 @@
+@using Microsoft.AspNetCore.Identity
+@using OtelQeydiyyatSistemi.Models
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+<ul class="navbar-nav">
+@if (SignInManager.IsSignedIn(User))
+{
+    <li class="nav-item">
+        <a class="nav-link text-light" asp-area="" asp-controller="Reservation" asp-action="Index">
+            <i class="fas fa-calendar-alt me-1"></i>Rezervasiyalarım
+        </a>
+    </li>
+    <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle text-light" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            @{
+                var user = await UserManager.GetUserAsync(User);
+                var userName = user != null ? user.FirstName : "İstifadəçi";
+            }
+            <i class="fas fa-user me-1"></i>@userName
+        </a>
+        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+            <li><a class="dropdown-item" asp-controller="Account" asp-action="Profile">Profilim</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li>
+                <form class="form-inline" asp-controller="Account" asp-action="Logout" method="post">
+                    <button type="submit" class="dropdown-item">Çıxış</button>
+                </form>
+            </li>
+        </ul>
+    </li>
+}
+else
+{
+    <li class="nav-item">
+        <a class="nav-link text-light" asp-controller="Account" asp-action="Register">
+            <i class="fas fa-user-plus me-1"></i>Qeydiyyat
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link text-light" asp-controller="Account" asp-action="Login">
+            <i class="fas fa-sign-in-alt me-1"></i>Giriş
+        </a>
+    </li>
+}
+</ul>

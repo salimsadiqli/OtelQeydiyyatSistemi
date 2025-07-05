@@ -1,0 +1,84 @@
+@model OtelQeydiyyatSistemi.Models.Room
+
+@{
+    ViewData["Title"] = "Otağı Sil";
+    Layout = "_Layout";
+}
+
+<div class="container py-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-action="Index">Admin Panel</a></li>
+            <li class="breadcrumb-item"><a asp-action="Rooms">Otaqlar</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Sil</li>
+        </ol>
+    </nav>
+
+    <div class="card shadow">
+        <div class="card-header bg-danger text-white">
+            <h3 class="mb-0"><i class="fas fa-trash me-2"></i>Otağı Sil</h3>
+        </div>
+        <div class="card-body">
+            <div class="alert alert-warning">
+                <i class="fas fa-exclamation-triangle me-2"></i>Diqqət! Bu otağı silmək istədiyinizə əminsiniz?
+            </div>
+
+            <dl class="row">
+                <dt class="col-sm-3">Otaq Nömrəsi</dt>
+                <dd class="col-sm-9">@Model.RoomNumber</dd>
+
+                <dt class="col-sm-3">Mərtəbə</dt>
+                <dd class="col-sm-9">@Model.Floor</dd>
+
+                <dt class="col-sm-3">Otaq Növü</dt>
+                <dd class="col-sm-9">@Model.RoomType.Name</dd>
+
+                <dt class="col-sm-3">Status</dt>
+                <dd class="col-sm-9">
+                    @switch (Model.Status)
+                    {
+                        case OtelQeydiyyatSistemi.Models.RoomStatus.Available:
+                            <span class="badge bg-success">Boş</span>
+                            break;
+                        case OtelQeydiyyatSistemi.Models.RoomStatus.Occupied:
+                            <span class="badge bg-danger">Dolu</span>
+                            break;
+                        case OtelQeydiyyatSistemi.Models.RoomStatus.Reserved:
+                            <span class="badge bg-warning">Rezervasiya olunub</span>
+                            break;
+                        case OtelQeydiyyatSistemi.Models.RoomStatus.Maintenance:
+                            <span class="badge bg-secondary">Təmirdə</span>
+                            break;
+                    }
+                </dd>
+
+                <dt class="col-sm-3">Təsvir</dt>
+                <dd class="col-sm-9">@Model.Description</dd>
+
+                <dt class="col-sm-3">Gecə Qiyməti</dt>
+                <dd class="col-sm-9">@Model.PricePerNight ₼</dd>
+            </dl>
+
+            @if (Model.Status != OtelQeydiyyatSistemi.Models.RoomStatus.Available)
+            {
+                <div class="alert alert-danger">
+                    <i class="fas fa-exclamation-circle me-2"></i>Bu otaq hal-hazırda boş deyil və silinə bilməz. Otağı silmək üçün əvvəlcə statusunu "Boş" kimi dəyişdirin.
+                </div>
+            }
+            else
+            {
+                <form asp-action="DeleteRoom" method="post">
+                    <input type="hidden" asp-for="Id" />
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a asp-action="Rooms" class="btn btn-secondary me-md-2">
+                            <i class="fas fa-times me-2"></i>Ləğv et
+                        </a>
+                        <button type="submit" class="btn btn-danger">
+                            <i class="fas fa-trash me-2"></i>Sil
+                        </button>
+                    </div>
+                </form>
+            }
+        </div>
+    </div>
+</div>

@@ -1,0 +1,66 @@
+@model OtelQeydiyyatSistemi.Models.Reservation
+
+@{
+    ViewData["Title"] = "Rezervasiyanı Ləğv Et";
+}
+
+<div class="container py-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Ana Səhifə</a></li>
+            <li class="breadcrumb-item"><a asp-action="Index">Rezervasiyalarım</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Rezervasiyanı Ləğv Et</li>
+        </ol>
+    </nav>
+
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-danger text-white">
+                    <h3 class="mb-0"><i class="fas fa-exclamation-triangle me-2"></i>Rezervasiyanı Ləğv Et</h3>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-circle me-2"></i>Diqqət! Bu əməliyyat geri qaytarıla bilməz.
+                    </div>
+
+                    <h4 class="mb-3">Rezervasiya Məlumatları</h4>
+                    <table class="table table-bordered">
+                        <tr>
+                            <th>Rezervasiya №</th>
+                            <td>@Model.Id</td>
+                        </tr>
+                        <tr>
+                            <th>Otaq</th>
+                            <td>@Model.Room.RoomNumber (@Model.Room.RoomType.Name)</td>
+                        </tr>
+                        <tr>
+                            <th>Giriş Tarixi</th>
+                            <td>@Model.CheckInDate.ToString("dd.MM.yyyy")</td>
+                        </tr>
+                        <tr>
+                            <th>Çıxış Tarixi</th>
+                            <td>@Model.CheckOutDate.ToString("dd.MM.yyyy")</td>
+                        </tr>
+                        <tr>
+                            <th>Ümumi Qiymət</th>
+                            <td>@Model.TotalPrice ₼</td>
+                        </tr>
+                    </table>
+
+                    <form asp-action="Cancel" method="post">
+                        <input type="hidden" asp-for="Id" />
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                            <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-secondary me-md-2">
+                                <i class="fas fa-arrow-left me-2"></i>Geri qayıt
+                            </a>
+                            <button type="submit" class="btn btn-danger">
+                                <i class="fas fa-times me-2"></i>Rezervasiyanı ləğv et
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

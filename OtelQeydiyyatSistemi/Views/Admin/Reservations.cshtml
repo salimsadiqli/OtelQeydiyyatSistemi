@@ -1,0 +1,135 @@
+@model IEnumerable<OtelQeydiyyatSistemi.Models.Reservation>
+
+@{
+    ViewData["Title"] = "Rezervasiyalar";
+    Layout = "_Layout";
+    var statusFilter = Context.Request.Query["status"].ToString();
+}
+
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="mb-0">
+            <i class="fas fa-calendar-alt me-2"></i>Rezervasiyalar
+        </h1>
+        <div>
+            <div class="btn-group" role="group">
+                <a asp-controller="Admin" asp-action="Reservations" class="btn @(string.IsNullOrEmpty(statusFilter) ? "btn-primary" : "btn-outline-primary")">
+                    Hamısı
+                </a>
+                <a asp-controller="Admin" asp-action="Reservations" asp-route-status="Pending" class="btn @(statusFilter == "Pending" ? "btn-primary" : "btn-outline-primary")">
+                    Gözləyənlər
+                </a>
+                <a asp-controller="Admin" asp-action="Reservations" asp-route-status="Confirmed" class="btn @(statusFilter == "Confirmed" ? "btn-primary" : "btn-outline-primary")">
+                    Təsdiqlənənlər
+                </a>
+                <a asp-controller="Admin" asp-action="Reservations" asp-route-status="CheckedIn" class="btn @(statusFilter == "CheckedIn" ? "btn-primary" : "btn-outline-primary")">
+                    Giriş edilənlər
+                </a>
+                <a asp-controller="Admin" asp-action="Reservations" asp-route-status="CheckedOut" class="btn @(statusFilter == "CheckedOut" ? "btn-primary" : "btn-outline-primary")">
+                    Çıxış edilənlər
+                </a>
+                <a asp-controller="Admin" asp-action="Reservations" asp-route-status="Cancelled" class="btn @(statusFilter == "Cancelled" ? "btn-primary" : "btn-outline-primary")">
+                    Ləğv edilənlər
+                </a>
+            </div>
+        </div>
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle me-2"></i>@TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-circle me-2"></i>@TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="card shadow">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Rezervasiya №</th>
+                            <th>Müştəri</th>
+                            <th>Otaq</th>
+                            <th>Giriş Tarixi</th>
+                            <th>Çıxış Tarixi</th>
+                            <th>Status</th>
+                            <th>Ümumi Qiymət</th>
+                            <th>Əməliyyatlar</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.Id</td>
+                                <td>@(item.User != null ? $"{item.User.FirstName} {item.User.LastName}" : "Müştəri məlumatı yoxdur")</td>
+                                <td>@(item.Room != null ? $"{item.Room.RoomNumber} ({(item.Room.RoomType != null ? item.Room.RoomType.Name : "Məlumat yoxdur")})" : "Otaq məlumatı yoxdur")</td>
+                                <td>@item.CheckInDate.ToString("dd.MM.yyyy")</td>
+                                <td>@item.CheckOutDate.ToString("dd.MM.yyyy")</td>
+                                <td>
+                                    @switch (item.Status)
+                                    {
+                                        case OtelQeydiyyatSistemi.Models.ReservationStatus.Pending:
+                                            <span class="badge bg-warning">Gözləyir</span>
+                                            break;
+                                        case OtelQeydiyyatSistemi.Models.ReservationStatus.Confirmed:
+                                            <span class="badge bg-success">Təsdiqlənib</span>
+                                            break;
+                                        case OtelQeydiyyatSistemi.Models.ReservationStatus.CheckedIn:
+                                            <span class="badge bg-primary">Giriş edilib</span>
+                                            break;
+                                        case OtelQeydiyyatSistemi.Models.ReservationStatus.CheckedOut:
+                                            <span class="badge bg-secondary">Çıxış edilib</span>
+                                            break;
+                                        case OtelQeydiyyatSistemi.Models.ReservationStatus.Cancelled:
+                                            <span class="badge bg-danger">Ləğv edilib</span>
+                                            break;
+                                    }
+                                </td>
+                                <td>@item.TotalPrice ₼</td>
+                                <td>
+                                    <div class="btn-group" role="group">
+                                        <a asp-controller="Reservation" asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-info-circle"></i>
+                                        </a>
+                                        @if (item.Status == OtelQeydiyyatSistemi.Models.ReservationStatus.Pending || 
+                                            item.Status == OtelQeydiyyatSistemi.Models.ReservationStatus.Confirmed)
+                                        {
+                                            <a asp-controller="Reservation" asp-action="CheckIn" asp-route-id="@item.Id" class="btn btn-sm btn-outline-success">
+                                                <i class="fas fa-sign-in-alt"></i>
+                                            </a>
+                                        }
+                                        @if (item.Status == OtelQeydiyyatSistemi.Models.ReservationStatus.CheckedIn)
+                                        {
+                                            <a asp-controller="Reservation" asp-action="CheckOut" asp-route-id="@item.Id" class="btn btn-sm btn-outline-secondary">
+                                                <i class="fas fa-sign-out-alt"></i>
+                                            </a>
+                                        }
+                                        @if (item.Status != OtelQeydiyyatSistemi.Models.ReservationStatus.CheckedIn && 
+                                            item.Status != OtelQeydiyyatSistemi.Models.ReservationStatus.CheckedOut && 
+                                            item.Status != OtelQeydiyyatSistemi.Models.ReservationStatus.Cancelled)
+                                        {
+                                            <a asp-controller="Reservation" asp-action="Cancel" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger">
+                                                <i class="fas fa-times"></i>
+                                            </a>
+                                        }
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

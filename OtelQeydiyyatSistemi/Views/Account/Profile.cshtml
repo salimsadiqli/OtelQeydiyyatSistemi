@@ -1,0 +1,91 @@
+@model OtelQeydiyyatSistemi.Models.ApplicationUser
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<ApplicationUser> UserManager
+
+@{
+    ViewData["Title"] = "Profil";
+    var user = await UserManager.GetUserAsync(User);
+}
+
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="card mb-4 shadow">
+                <div class="card-header bg-dark text-white">
+                    <h5 class="mb-0"><i class="fas fa-user-circle me-2"></i>Profil</h5>
+                </div>
+                <div class="card-body text-center">
+                    <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" alt="avatar"
+                         class="rounded-circle img-fluid" style="width: 150px;">
+                    <h5 class="my-3">@user.FirstName @user.LastName</h5>
+                    <p class="text-muted mb-1">@(User.IsInRole("Admin") ? "Admin" : "Müştəri")</p>
+                    <p class="text-muted mb-4">@user.Address</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-8">
+            <div class="card mb-4 shadow">
+                <div class="card-header bg-dark text-white">
+                    <h5 class="mb-0"><i class="fas fa-info-circle me-2"></i>Şəxsi Məlumatlar</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <p class="mb-0">Ad</p>
+                        </div>
+                        <div class="col-sm-9">
+                            <p class="text-muted mb-0">@user.FirstName</p>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <p class="mb-0">Soyad</p>
+                        </div>
+                        <div class="col-sm-9">
+                            <p class="text-muted mb-0">@user.LastName</p>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <p class="mb-0">Email</p>
+                        </div>
+                        <div class="col-sm-9">
+                            <p class="text-muted mb-0">@user.Email</p>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <p class="mb-0">Ünvan</p>
+                        </div>
+                        <div class="col-sm-9">
+                            <p class="text-muted mb-0">@user.Address</p>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <p class="mb-0">Qeydiyyat tarixi</p>
+                        </div>
+                        <div class="col-sm-9">
+                            <p class="text-muted mb-0">@user.RegistrationDate.ToString("dd.MM.yyyy")</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mb-4 shadow">
+                <div class="card-header bg-dark text-white">
+                    <h5 class="mb-0"><i class="fas fa-calendar-alt me-2"></i>Son Rezervasiyalar</h5>
+                </div>
+                <div class="card-body">
+                    <a asp-controller="Reservation" asp-action="Index" class="btn btn-primary">
+                        <i class="fas fa-list me-2"></i>Bütün rezervasiyalarıma bax
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

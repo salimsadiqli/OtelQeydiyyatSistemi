@@ -1,0 +1,52 @@
+@model OtelQeydiyyatSistemi.Models.ApplicationUser
+
+@{
+    ViewData["Title"] = "İstifadəçi Sil";
+}
+
+<div class="container py-4">
+    <h1 class="mb-4 border-bottom pb-2">
+        <i class="fas fa-user-minus me-2"></i>İstifadəçi Sil
+    </h1>
+
+    <div class="alert alert-danger">
+        <i class="fas fa-exclamation-triangle me-2"></i>
+        <strong>Diqqət!</strong> Bu istifadəçini silmək istədiyinizə əminsiniz?
+    </div>
+
+    <div class="card shadow mb-4">
+        <div class="card-header bg-danger text-white">
+            <h5 class="mb-0">İstifadəçi Məlumatları</h5>
+        </div>
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-3">Ad:</dt>
+                <dd class="col-sm-9">@Model.FirstName</dd>
+
+                <dt class="col-sm-3">Soyad:</dt>
+                <dd class="col-sm-9">@Model.LastName</dd>
+
+                <dt class="col-sm-3">Email:</dt>
+                <dd class="col-sm-9">@Model.Email</dd>
+
+                <dt class="col-sm-3">Ünvan:</dt>
+                <dd class="col-sm-9">@Model.Address</dd>
+
+                <dt class="col-sm-3">Qeydiyyat tarixi:</dt>
+                <dd class="col-sm-9">@Model.RegistrationDate.ToString("dd.MM.yyyy")</dd>
+            </dl>
+        </div>
+    </div>
+
+    <form asp-action="DeleteUser">
+        <input type="hidden" name="id" value="@Model.Id" />
+        <div class="d-flex justify-content-between">
+            <a asp-action="Users" class="btn btn-secondary">
+                <i class="fas fa-arrow-left me-2"></i>Geri
+            </a>
+            <button type="submit" class="btn btn-danger">
+                <i class="fas fa-trash me-2"></i>İstifadəçini Sil
+            </button>
+        </div>
+    </form>
+</div>
